@@ -1,25 +1,16 @@
-//NPM Packages
-
-// Moment JS
+//NPM Package
 var moment = require('moment');
-moment().format();
-
-//AXIOS - OMDB, Bands In Town
 var axios = require("axios");
-
-// dotenv
-require("dotenv").config();
 var keys = require("./keys.js");
-
-// Spotify keys access
-var spotify = new spotify(keys.spotify);
-// node-spotify-api 
+//for use with random.txt, reference Class Activity #14
+var fs = require('fs');
 var Spotify = require('node-spotify-api');
 
-// fs
-var fs = require('fs');
-//for use with random.txt, reference Class Activity #14
+moment().format();
+require("dotenv").config();
 
+// Spotify keys access
+// var spotify = new Spotify(keys.spotify);
 
 // Take in the following commands via command line, this will determine the parameters of the search
 var commands = ["concert-this",
@@ -30,7 +21,7 @@ var commands = ["concert-this",
 var commandInput = process.argv[2];
 
 //user query via command line
-var query = process.argv[3].split(" ");
+var query = process.argv[3];
 
 
 
@@ -48,6 +39,18 @@ var query = process.argv[3].split(" ");
 //  Album song is from
 // if no results, default "The Sign" by Ace of Base
 
+if (commandInput === commands[1]) {
+
+    spotify.search({ type: 'track', query: 'All the Small Things' }, function (err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+
+        console.log(data);
+    });
+}
+
+
 // if user inputs "movie-this" & <movie name here>, AXIOs will perform a search of the movie title (reference Class Activity #18)
 // the following information will be console.log'd to the terminal
 //  Title of the movie - data.Title
@@ -60,13 +63,17 @@ var query = process.argv[3].split(" ");
 //  Actors in the movie - data.Actors
 
 //Reference Class Activity #18
-var movieName = query.join("+");
-var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
-axios.get(queryUrl).then(
-    function (response) {
-        console.log(response);
-    }
-);
+var movieName = query.split(" ").join("+");
+
+if (commandInput === commands[2]) {
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+    axios.get(queryUrl).then(
+        function (response) {
+            var dataFormat = response.data;
+            console.log("Movie Tite: " + dataFormat.Title + "\nRelease Year: " + dataFormat.Year + "\nIMDB Rating: " + dataFormat.imdbRating + "\nRotten Tomatoes Rating: " + dataFormat.Ratings + "\nProduced in: " + dataFormat.Country + "\nLanguages: " + dataFormat.Language + "\nPlot: " + dataFormat.Plot + "\nActors: " + dataFormat.Actors);
+        }
+    );
+}
 // if no movie is entered, default "Mr. Nobody" & console.log statement
 
 //if user inputs "do-what-it-syas", fs Node will tall on random.txt & call on LIRI's commands.
