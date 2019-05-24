@@ -10,4 +10,11 @@ Language Interpretation & Recongnition Interface (LIRI) is a command line node p
 3. Moment
 4. DotEnv
 
+##Process
+launch node liri.js
 
+type in one of the following commands
+1. 
+
+type in the corresponding search parameter in quotes,
+Example "Raining Blood"
