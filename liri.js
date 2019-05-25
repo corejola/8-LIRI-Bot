@@ -6,7 +6,7 @@ var keys = require("./keys.js");
 var fs = require('fs');
 var Spotify = require('node-spotify-api');
 
-moment().format();
+// moment().format();
 require("dotenv").config();
 
 // Spotify keys access
@@ -23,13 +23,32 @@ var commandInput = process.argv[2];
 //user query via command line
 var query = process.argv[3];
 
-
-
 // if user inputs "concert-this" & <artist/band>, AXIOs will perform a search against Bands In Town API "https://rest.bandsintown.com/artists/" + <artist or band>, + "/events?app_id=codingbootcamp"
 // the following information will be console.log'd to the terminal: 
 //  Name of the Venue
 //  Venue Location
+//  do you need geocoder for the venue location?
 //  Date of the event in "MM/DD/YYYY" (moment.js)
+var bandQuery = query.split(" ").join("+");
+if (commandInput === commands[0]) {
+
+    var queryUrl = 'https://rest.bandsintown.com/artists/' + bandQuery + '/events?app_id=trilogy&date=' + '2018-01-01%2C2019-09-09';
+    axios.get(queryUrl).then(
+        function (response) {
+            //review for in loop to go through the provided object
+            var showDate = moment(response.data[0].datetime).format("MM-DD-YYYY");
+            var lat = response.data[0].venue.latitude
+            var long = response.data[0].venue.longitude
+            // response.data[0].datetime returns date in ISO 8601 formatt 
+            // var dateSlice = showDate.slice(0, 10);
+            console.log("Date of Show: " + showDate);
+            console.log(lat + " " + long);
+
+        }
+    );
+
+}
+
 
 // if user inputs "spotify-this-song" & <song name here>, this will search the spotify API (research node-spotify-api package)
 // the follwoing information will be console.log'd to the terminal:
