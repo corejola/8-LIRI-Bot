@@ -1,16 +1,18 @@
 //NPM Package
+require("dotenv").config();
 var moment = require('moment');
 var axios = require("axios");
 var keys = require("./keys.js");
+// console.log(keys);
 //for use with random.txt, reference Class Activity #14
 var fs = require('fs');
 var Spotify = require('node-spotify-api');
 
-moment().format();
-require("dotenv").config();
+// moment().format();
+
 
 // Spotify keys access
-// var spotify = new Spotify(keys.spotify);
+var spotify = new Spotify(keys.spotify);
 
 // Take in the following commands via command line, this will determine the parameters of the search
 var commands = ["concert-this",
@@ -21,15 +23,36 @@ var commands = ["concert-this",
 var commandInput = process.argv[2];
 
 //user query via command line
-var query = process.argv[3];
-
-
+//create normalized value prior to APIs
+var query = process.argv.slice(3);
+query = query.join(" ");
 
 // if user inputs "concert-this" & <artist/band>, AXIOs will perform a search against Bands In Town API "https://rest.bandsintown.com/artists/" + <artist or band>, + "/events?app_id=codingbootcamp"
 // the following information will be console.log'd to the terminal: 
 //  Name of the Venue
 //  Venue Location
+//  do you need geocoder for the venue location?
 //  Date of the event in "MM/DD/YYYY" (moment.js)
+
+if (commandInput === commands[0]) {
+    var bandQuery = query.split(" ").join("%20");
+    var queryUrl = 'https://rest.bandsintown.com/artists/' + bandQuery + '/events?app_id=trilogy';
+    axios.get(queryUrl).then(
+        function (response) {
+            //review for in loop to go through the provided object
+            for (var i = 0; i < 5; i++) {
+                var venueName = response.data[i].venue.name;
+                var venueCity = response.data[i].venue.city;
+                var venueState = response.data[i].venue.region;
+                var venueCountry = response.data[i].venue.country;
+                var showDate = moment(response.data[i].datetime).format("MM-DD-YYYY");
+                console.log("Name of Venue: " + venueName);
+                console.log("Location of Show: " + venueCity + ", " + venueState + ", " + venueCountry);
+                console.log("Date of Show: " + showDate);
+            };
+        });
+};
+
 
 // if user inputs "spotify-this-song" & <song name here>, this will search the spotify API (research node-spotify-api package)
 // the follwoing information will be console.log'd to the terminal:
@@ -63,9 +86,8 @@ if (commandInput === commands[1]) {
 //  Actors in the movie - data.Actors
 
 //Reference Class Activity #18
-var movieName = query.split(" ").join("+");
-
 if (commandInput === commands[2]) {
+    var movieName = query.split(" ").join("+");
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
     axios.get(queryUrl).then(
         function (response) {
