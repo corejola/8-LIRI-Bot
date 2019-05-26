@@ -22,7 +22,6 @@ var commands = ["concert-this",
 
 var commandInput = process.argv[2];
 
-//user query via command line
 //create normalized value prior to APIs
 var query = process.argv.slice(3);
 query = query.join(" ");
@@ -41,7 +40,7 @@ function bandsInTown(response) {
                 return false;
         }
         return true;
-    }
+    };
     console.log("Object Empty: " + isEmpty(response.data))
     if (response.data.length === 0) {
         console.log("No Shows for this Artist")
@@ -58,10 +57,10 @@ function bandsInTown(response) {
             console.log("Date of Show: " + showDate);
             console.log("-----------")
         };
-
     };
 };
 
+//Bands In Town
 if (commandInput === commands[0]) {
     var bandQuery = query.split(" ").join("%20");
     var queryUrl = 'https://rest.bandsintown.com/artists/' + bandQuery + '/events?app_id=trilogy';
@@ -70,29 +69,38 @@ if (commandInput === commands[0]) {
             //review for in loop to go through the provided object
             //error response if NO shows are upcoming
             bandsInTown(response);
-
         });
 };
 
+function spotifyThisSong(data) {
+    if (data.tracks.items.length === 0) {
+        console.log("No tracks found")
+    } else {
+        for (var i = 0; i < 5; i++) {
+            console.log("\n----------------------")
+            //  artist(s)
+            console.log("Artist: " + data.tracks.items[i].album.artists[0].name)
+            //  song's name
+            console.log("Track Name: " + data.tracks.items[i].name)
+            //  Album song is from
+            console.log("Album: " + data.tracks.items[i].album.name)
+            //  preview link of the song from Spotify
+            console.log("Link to Spotify: " + data.tracks.items[i].external_urls.spotify)
+        };
+    }
+}
 
-// if user inputs "spotify-this-song" & <song name here>, this will search the spotify API (research node-spotify-api package)
-// the follwoing information will be console.log'd to the terminal:
-//  artist(s)
-//  song's name
-//  preview link of the song from Spotify
-//  Album song is from
-// if no results, default "The Sign" by Ace of Base
-
+//Spotify This Song
 if (commandInput === commands[1]) {
 
-    spotify.search({ type: 'track', query: 'All the Small Things' }, function (err, data) {
+    spotify.search({ type: 'track', query: query, limit: 5 }, function (err, data) {
         if (err) {
             return console.log('Error occurred: ' + err);
         }
-
-        console.log(data);
+        spotifyThisSong(data);
     });
-}
+    // if no results, default "The Sign" by Ace of Base
+};
 
 
 // if user inputs "movie-this" & <movie name here>, AXIOs will perform a search of the movie title (reference Class Activity #18)
@@ -108,7 +116,6 @@ if (commandInput === commands[1]) {
 
 function movieThis(response) {
     var dataFormat = response.data;
-
     if (dataFormat.Title === undefined) {
         console.log("\n----------------------")
         console.log("No Movie found.")
@@ -116,11 +123,10 @@ function movieThis(response) {
         console.log("------------------------")
     } else {
         console.log("\n----------------------")
-        console.log("Movie Tite: " + dataFormat.Title + "\nRelease Year: " + dataFormat.Year + "\nIMDB Rating: " + dataFormat.imdbRating + "\nRotten Tomatoes Rating: " + JSON.stringify(dataFormat.Ratings[1]) + "\nProduced in: " + dataFormat.Country + "\nLanguages: " + dataFormat.Language + "\nPlot: " + dataFormat.Plot + "\nActors: " + dataFormat.Actors);
+        console.log("Movie Tite: " + dataFormat.Title + "\nRelease Year: " + dataFormat.Year + "\nIMDB Rating: " + dataFormat.imdbRating + "\nRotten Tomatoes Rating: " + dataFormat.Ratings[1].Value + "\nProduced in: " + dataFormat.Country + "\nLanguages: " + dataFormat.Language + "\nPlot: " + dataFormat.Plot + "\nActors: " + dataFormat.Actors);
     };
-}
-
-//Reference Class Activity #18
+};
+//Movie This
 if (commandInput === commands[2]) {
     var movieName = query.split(" ").join("+");
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
@@ -129,7 +135,7 @@ if (commandInput === commands[2]) {
             movieThis(response);
         }
     );
-}
+};
 // if no movie is entered, default "Mr. Nobody" & console.log statement
 
-//if user inputs "do-what-it-syas", fs Node will tall on random.txt & call on LIRI's commands.
+//if user inputs "do-what-it-syas", fs Node will call on random.txt & call on LIRI's commands.
