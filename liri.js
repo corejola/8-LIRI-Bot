@@ -35,6 +35,14 @@ query = query.join(" ");
 //  Date of the event in "MM/DD/YYYY" (moment.js)
 
 function bandsInTown(response) {
+    function isEmpty(obj) {
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop))
+                return false;
+        }
+        return true;
+    }
+    console.log(isEmpty(response.data))
     if (response.data.length === 0) {
         console.log("No Shows for this Artist")
     } else {
@@ -61,14 +69,6 @@ if (commandInput === commands[0]) {
         function (response) {
             //review for in loop to go through the provided object
             //error response if NO shows are upcoming
-            // function isEmpty(obj) {
-            //     for (var prop in obj) {
-            //         if (obj.hasOwnProperty(prop))
-            //             return false;
-            //     }
-            //     return true;
-            // }
-            // console.log(isEmpty(response.data))
             bandsInTown(response);
 
         });
