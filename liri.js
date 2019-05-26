@@ -34,22 +34,43 @@ query = query.join(" ");
 //  do you need geocoder for the venue location?
 //  Date of the event in "MM/DD/YYYY" (moment.js)
 
+function bandsInTown(response) {
+    if (response.data.length === 0) {
+        console.log("No Shows for this Artist")
+    } else {
+        for (var i = 0; i < 5; i++) {
+            var venueName = response.data[i].venue.name;
+            var venueCity = response.data[i].venue.city;
+            var venueState = response.data[i].venue.region;
+            var venueCountry = response.data[i].venue.country;
+            var showDate = moment(response.data[i].datetime).format("MM-DD-YYYY");
+            console.log("\n")
+            console.log("Name of Venue: " + venueName);
+            console.log("Location of Show: " + venueCity + ", " + venueState + ", " + venueCountry);
+            console.log("Date of Show: " + showDate);
+            console.log("-----------")
+        };
+
+    };
+};
+
 if (commandInput === commands[0]) {
     var bandQuery = query.split(" ").join("%20");
     var queryUrl = 'https://rest.bandsintown.com/artists/' + bandQuery + '/events?app_id=trilogy';
     axios.get(queryUrl).then(
         function (response) {
             //review for in loop to go through the provided object
-            for (var i = 0; i < 5; i++) {
-                var venueName = response.data[i].venue.name;
-                var venueCity = response.data[i].venue.city;
-                var venueState = response.data[i].venue.region;
-                var venueCountry = response.data[i].venue.country;
-                var showDate = moment(response.data[i].datetime).format("MM-DD-YYYY");
-                console.log("Name of Venue: " + venueName);
-                console.log("Location of Show: " + venueCity + ", " + venueState + ", " + venueCountry);
-                console.log("Date of Show: " + showDate);
-            };
+            //error response if NO shows are upcoming
+            // function isEmpty(obj) {
+            //     for (var prop in obj) {
+            //         if (obj.hasOwnProperty(prop))
+            //             return false;
+            //     }
+            //     return true;
+            // }
+            // console.log(isEmpty(response.data))
+            bandsInTown(response);
+
         });
 };
 
