@@ -42,7 +42,7 @@ function bandsInTown(response) {
         }
         return true;
     }
-    console.log(isEmpty(response.data))
+    console.log("Object Empty: " + isEmpty(response.data))
     if (response.data.length === 0) {
         console.log("No Shows for this Artist")
     } else {
@@ -106,14 +106,27 @@ if (commandInput === commands[1]) {
 //  Plot of the movie (S or L?) - data.Plot
 //  Actors in the movie - data.Actors
 
+function movieThis(response) {
+    var dataFormat = response.data;
+
+    if (dataFormat.Title === undefined) {
+        console.log("\n----------------------")
+        console.log("No Movie found.")
+        console.log("Please try search again.")
+        console.log("------------------------")
+    } else {
+        console.log("\n----------------------")
+        console.log("Movie Tite: " + dataFormat.Title + "\nRelease Year: " + dataFormat.Year + "\nIMDB Rating: " + dataFormat.imdbRating + "\nRotten Tomatoes Rating: " + JSON.stringify(dataFormat.Ratings[1]) + "\nProduced in: " + dataFormat.Country + "\nLanguages: " + dataFormat.Language + "\nPlot: " + dataFormat.Plot + "\nActors: " + dataFormat.Actors);
+    };
+}
+
 //Reference Class Activity #18
 if (commandInput === commands[2]) {
     var movieName = query.split(" ").join("+");
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
     axios.get(queryUrl).then(
         function (response) {
-            var dataFormat = response.data;
-            console.log("Movie Tite: " + dataFormat.Title + "\nRelease Year: " + dataFormat.Year + "\nIMDB Rating: " + dataFormat.imdbRating + "\nRotten Tomatoes Rating: " + dataFormat.Ratings + "\nProduced in: " + dataFormat.Country + "\nLanguages: " + dataFormat.Language + "\nPlot: " + dataFormat.Plot + "\nActors: " + dataFormat.Actors);
+            movieThis(response);
         }
     );
 }
