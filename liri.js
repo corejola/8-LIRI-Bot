@@ -45,29 +45,38 @@ function bandsInTown(response) {
     };
 };
 
-function spotifyThisSong(data) {
-    if (data.tracks.items.length === 0) {
-        console.log("No tracks found, so checkout this sweet gem!");
-        spotify.search({ type: 'track', query: "The Sign", limit: 20 }, function (err, data) {
-            if (err) {
-                return console.log('Error occurred: ' + err);
-            } else {
+function spotifyThisSong(query) {
+    spotify.search({ type: 'track', query: query, limit: 5 }, function (err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+        if (data.tracks.total === 0) {
+            console.log("No tracks found, so checkout this sweet gem!");
+            spotify.search({ type: 'track', query: "The Sign", limit: 20 }, function (err, data) {
+                if (err) {
+                    return console.log('Error occurred: ' + err);
+                }
                 console.log("\n----------------------")
                 console.log("Artist: " + data.tracks.items[7].album.artists[0].name)
                 console.log("Track Name: " + data.tracks.items[7].name)
                 console.log("Album: " + data.tracks.items[7].album.name)
                 console.log("Link to Spotify: " + data.tracks.items[7].external_urls.spotify)
-            }
-        });
-    } else {
-        for (var i = 0; i < 5; i++) {
-            console.log("\n----------------------")
-            console.log("Artist: " + data.tracks.items[i].album.artists[0].name)
-            console.log("Track Name: " + data.tracks.items[i].name)
-            console.log("Album: " + data.tracks.items[i].album.name)
-            console.log("Link to Spotify: " + data.tracks.items[i].external_urls.spotify)
+            });
+        } else {
+            spotify.search({ type: 'track', query: query, limit: 5 }, function (err, data) {
+                if (err) {
+                    return console.log('Error occurred: ' + err);
+                }
+                for (var i = 0; i < 5; i++) {
+                    console.log("\n----------------------")
+                    console.log("Artist: " + data.tracks.items[i].album.artists[0].name)
+                    console.log("Track Name: " + data.tracks.items[i].name)
+                    console.log("Album: " + data.tracks.items[i].album.name)
+                    console.log("Link to Spotify: " + data.tracks.items[i].external_urls.spotify)
+                };
+            });
         };
-    };
+    });
 };
 
 function movieThis(response) {
@@ -97,12 +106,7 @@ if (commandInput === commands[0]) {
 
 //Spotify This Song
 if (commandInput === commands[1]) {
-    spotify.search({ type: 'track', query: query, limit: 5 }, function (err, data) {
-        if (err) {
-            return console.log('Error occurred: ' + err);
-        }
-        spotifyThisSong(data);
-    });
+    spotifyThisSong(query);
 };
 
 //Movie This
@@ -116,5 +120,13 @@ if (commandInput === commands[2]) {
     );
 };
 
-//for use with random.txt, reference Class Activity #14
-//if user inputs "do-what-it-syas", fs Node will call on random.txt & call on LIRI's commands.
+//if user inputs "do-what-it-says", fs Node will call on random.txt & call on LIRI's commands.
+if (commandInput === commands[3]) {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        var splitData = data.split(",");
+        var random = [];
+        random.push(splitData);
+        console.log(random);
+
+    });
+};
