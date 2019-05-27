@@ -18,6 +18,8 @@ launch `node liri.js` & type in one of the following commands:
 * Search is performed utilizing AXIOS using the following call format: 
 `https://rest.bandsintown.com/artists/ + <artist/band name here> + /events?app_id=trilogy`
 
+![Concert-This](assets/images/LIRI-Node-App_concert-this.png)
+
 ### 2. node liri.js spotify-this-song <song name here>  🎼 
 
 - Inputing `spotify-this-song` followed by the `song name` will show the following information about the song in your terminal/bash window
@@ -29,7 +31,7 @@ launch `node liri.js` & type in one of the following commands:
 * Search is performed utilizing `Node-Spotify-API` using the following call format: 
 ` spotify.search({ type: 'track', query: song name, limit: 5 }, function (err, data) `
 
-![Spotify This Song](assets\images\LIRI-Node-App_spotify-this-song.png)
+![Spotify-This-Song](assets/images/LIRI-Node-App_spotify-this-song.png)
 
 ### 3. node liri.js movie-this <movie name here> 🎬
 
@@ -46,7 +48,7 @@ launch `node liri.js` & type in one of the following commands:
 * Search is performed utilizing AXIOS using the following call format: 
 `http://www.omdbapi.com/?t= + movieName + &y=&plot=short&apikey=trilogy`
 
-![Movie This](assets\images\LIRI-Node-App_Movie-This.png)
+![Movie-This](assets/images/LIRI-Node-App_Movie-This.png)
    
 
 ### 4. node liri.js do-what-it-says ⁉️ 
@@ -55,7 +57,7 @@ launch `node liri.js` & type in one of the following commands:
 - Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
 - `fs.readFile("random.txt", "utf8", function (error, data)`
 
-![Do What It Says](assets\images\LIRI-Node-App_do-what-it-says.png)
+![Do-What-It-Says](assets/images/LIRI-Node-App_do-what-it-says.png)
 
 ## Node Packages Used   🔨 
 - [Node-Spotify-API](https://www.npmjs.com/package/node-spotify-api)
