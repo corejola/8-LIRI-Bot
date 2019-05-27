@@ -29,10 +29,7 @@ function spotifyThisSong(query) {
                     return console.log('Error occurred: ' + err);
                 }
                 console.log("\n----------------------")
-                console.log("Artist: " + data.tracks.items[7].album.artists[0].name)
-                console.log("Track Name: " + data.tracks.items[7].name)
-                console.log("Album: " + data.tracks.items[7].album.name)
-                console.log("Link to Spotify: " + data.tracks.items[7].external_urls.spotify)
+                console.log("\nArtist: " + data.tracks.items[7].album.artists[0].name + "\nTrack Name: " + data.tracks.items[7].name + "\nAlbum: " + data.tracks.items[7].album.name + "\nLink to Spotify: " + data.tracks.items[7].external_urls.spotify)
             });
         } else {
             spotify.search({ type: 'track', query: query, limit: 5 }, function (err, data) {
@@ -41,10 +38,10 @@ function spotifyThisSong(query) {
                 }
                 for (var i = 0; i < 5; i++) {
                     console.log("\n----------------------")
-                    console.log("Artist: " + data.tracks.items[i].album.artists[0].name)
-                    console.log("Track Name: " + data.tracks.items[i].name)
-                    console.log("Album: " + data.tracks.items[i].album.name)
-                    console.log("Link to Spotify: " + data.tracks.items[i].external_urls.spotify)
+                    console.log("Artist: " + data.tracks.items[i].album.artists[0].name + "\nTrack Name: " + data.tracks.items[i].name + "\nAlbum: " + data.tracks.items[i].album.name + "\nLink to Spotify: " + data.tracks.items[i].external_urls.spotify)
+                    fs.appendFile("log.txt", "\nArtist: " + data.tracks.items[i].album.artists[0].name + "\nTrack Name: " + data.tracks.items[i].name + "\nAlbum: " + data.tracks.items[i].album.name + "\nLink to Spotify: " + data.tracks.items[i].external_urls.spotify + "; ", function (err) {
+                        if (err) console.log(err)
+                    });
                 };
             });
         };
@@ -67,6 +64,10 @@ function movieThis(response) {
             } else {
                 console.log("\n----------------------")
                 console.log("Movie Tite: " + dataFormat.Title + "\nRelease Year: " + dataFormat.Year + "\nIMDB Rating: " + dataFormat.imdbRating + "\nRotten Tomatoes Rating: " + dataFormat.Ratings[1].Value + "\nProduced in: " + dataFormat.Country + "\nLanguages: " + dataFormat.Language + "\nPlot: " + dataFormat.Plot + "\nActors: " + dataFormat.Actors);
+                //append to log.txt
+                fs.appendFile("log.txt", "\nMovie Tite: " + dataFormat.Title + "\nRelease Year: " + dataFormat.Year + "\nIMDB Rating: " + dataFormat.imdbRating + "\nRotten Tomatoes Rating: " + dataFormat.Ratings[1].Value + "\nProduced in: " + dataFormat.Country + "\nLanguages: " + dataFormat.Language + "\nPlot: " + dataFormat.Plot + "\nActors: " + dataFormat.Actors + "; ", function (err) {
+                    if (err) console.log(err)
+                });
             };;
         }
     );
@@ -77,11 +78,8 @@ function bandsInTown(query) {
     var queryUrl = 'https://rest.bandsintown.com/artists/' + queryNormalize + '/events?app_id=trilogy';
     axios.get(queryUrl).then(
         function (response) {
-            if (response.config.timeout === 0) {
-                console.log("No artist's found, please search again.");
-            }
-            else if (response.data.length === 0) {
-                console.log("No Shows for this Artist")
+            if (response.data.length === 0) {
+                console.log("\nNo Shows for this Artist")
             } else {
                 for (var i = 0; i < 5; i++) {
                     var venueName = response.data[i].venue.name;
@@ -89,11 +87,11 @@ function bandsInTown(query) {
                     var venueState = response.data[i].venue.region;
                     var venueCountry = response.data[i].venue.country;
                     var showDate = moment(response.data[i].datetime).format("MM-DD-YYYY");
+                    console.log("Name of Venue: " + venueName + "\nLocation of Show: " + venueCity + ", " + venueState + ", " + venueCountry + "\nDate of Show: " + showDate);
                     console.log("\n----------------------")
-                    console.log("Name of Venue: " + venueName);
-                    console.log("Location of Show: " + venueCity + ", " + venueState + ", " + venueCountry);
-                    console.log("Date of Show: " + showDate);
-                    console.log("\n----------------------")
+                    fs.appendFile("log.txt", "\nName of Venue: " + venueName + "\nLocation of Show: " + venueCity + ", " + venueState + ", " + venueCountry + "\nDate of Show: " + showDate + "; ", function (err) {
+                        if (err) console.log(err)
+                    });
                 };
             };
         });
@@ -115,6 +113,7 @@ if (commandInput === commands[2]) {
     movieThis(query)
 };
 
+//Do What It Says
 if (commandInput === commands[3]) {
     fs.readFile("random.txt", "utf8", function (error, data) {
         var txtData = data.split(",");
